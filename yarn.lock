@@ -1037,9 +1037,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/open-rpc-docs-react@workspace:.":
+"@nilfoundation/nil-open-rpc-docs-react@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@metamask/open-rpc-docs-react@workspace:."
+  resolution: "@nilfoundation/nil-open-rpc-docs-react@workspace:."
   dependencies:
     "@json-schema-tools/traverse": ^1.10.1
     "@lavamoat/allow-scripts": ^2.3.1

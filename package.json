@@ -1,14 +1,14 @@
 {
-  "name": "@metamask/open-rpc-docs-react",
-  "version": "0.2.0",
-  "description": "OpenRPC Docs React",
-  "homepage": "https://github.com/MetaMask/open-rpc-docs-react#readme",
+  "name": "@nilfoundation/nil-open-rpc-docs-react",
+  "version": "0.2.1",
+  "description": "=nil; OpenRPC Docs React",
+  "homepage": "https://github.com/khannanov-nil/nil-open-rpc-docs-react#readme",
   "bugs": {
-    "url": "https://github.com/MetaMask/open-rpc-docs-react/issues"
+    "url": "https://github.com/khannanov-nil/nil-open-rpc-docs-react/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/open-rpc-docs-react.git"
+    "url": "https://github.com/khannanov-nil/nil-open-rpc-docs-react.git"
   },
   "license": "Apache-2.0",
   "main": "./dist/index.js",
