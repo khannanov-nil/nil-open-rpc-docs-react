@@ -215,14 +215,6 @@ const InteractiveMethod: React.FC<Props> = (props) => {
 
   return (
     <div className="container">
-      {!metamaskInstalled &&
-        <div className="row">
-          <div className="alert alert--danger" role="alert">
-            Install MetaMask for your platform and refresh the page. The interactive features in this documentation require installing <a target="_blank" href="https://metamask.io/download/">MetaMask</a>.
-          </div>
-          <br />
-        </div>
-      }
       {method.params.length > 0 &&
       <>
         <div className="row">
@@ -269,11 +261,6 @@ const InteractiveMethod: React.FC<Props> = (props) => {
           }
         </div>
       </div>}
-      <div className="row">
-        <button className="button button--primary button--block" onClick={handleExec} disabled={!metamaskInstalled}>
-          Send Request
-        </button>
-      </div>
     </div>
   );
 
