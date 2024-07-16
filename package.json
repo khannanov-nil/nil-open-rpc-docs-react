@@ -1,6 +1,6 @@
 {
-  "name": "@nilfoundation/nil-open-rpc-docs-react",
-  "version": "0.2.1",
+  "name": "@khannanov-nil/nil-open-rpc-docs-react",
+  "version": "0.3.0",
   "description": "=nil; OpenRPC Docs React",
   "homepage": "https://github.com/khannanov-nil/nil-open-rpc-docs-react#readme",
   "bugs": {
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@json-schema-tools/traverse": "^1.10.1",
+    "@open-rpc/client-js": "^1.8.1",
     "@open-rpc/examples": "^1.6.1",
     "@rjsf/core": "^5.6.2",
     "@rjsf/utils": "^5.6.2",
@@ -42,15 +43,17 @@
     "@stoplight/markdown-viewer": "^5",
     "@stoplight/mosaic": "^1.32",
     "@stoplight/mosaic-code-viewer": "^1.32",
+    "ethers": "^6.13.1",
     "hash-color-material": "^1.1.3",
+    "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.15",
+    "node-fetch": "^3.3.2",
     "qs": "^6.11.1",
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.4.3"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.3.1",
-    "@lavamoat/preinstall-always-fail": "^1.0.0",
     "@metamask/auto-changelog": "^3.1.0",
     "@metamask/eslint-config": "^11.0.1",
     "@metamask/eslint-config-jest": "^11.0.0",
@@ -104,7 +107,7 @@
   },
   "lavamoat": {
     "allowScripts": {
-      "@lavamoat/preinstall-always-fail": false,
+      "isomorphic-fetch": true,
       "@stoplight/mosaic>@fortawesome/fontawesome-svg-core": false,
       "@stoplight/mosaic>@fortawesome/fontawesome-svg-core>@fortawesome/fontawesome-common-types": false,
       "@testing-library/react>@testing-library/dom>aria-query>@babel/runtime-corejs3>core-js-pure": false

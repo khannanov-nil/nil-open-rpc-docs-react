@@ -3,6 +3,7 @@ import { ContentDescriptorObject } from '@open-rpc/meta-schema';
 import './ContentDescriptor.css';
 import MarkdownDescription from '../MarkdownDescription/MarkdownDescription';
 import { JsonSchemaViewer } from '@stoplight/json-schema-viewer';
+import { JSONSchema } from 'json-schema-ref-parser';
 
 interface IProps {
   contentDescriptor?: ContentDescriptorObject;
@@ -31,7 +32,7 @@ class ContentDescriptor extends Component<IProps> {
         )}
         {contentDescriptor.schema && (
           <div className="stoplight">
-            <JsonSchemaViewer schema={contentDescriptor.schema} />
+            <JsonSchemaViewer schema={contentDescriptor.schema as JSONSchema} />
           </div>
         )}
       </div>
