@@ -77,11 +77,8 @@ interface APIProps {
 
 const TokenForm: React.FC<APIProps> = (props) => {
   const schema: RJSFSchema = {
-    title: 'API token',
-    type: 'object',
-    properties: {
-      token: { type: 'string', default: '' }
-    }
+    title: undefined,
+    type: 'string'
   };
   return (
     <Form
@@ -104,11 +101,8 @@ const TokenForm: React.FC<APIProps> = (props) => {
 
 const UsernameForm: React.FC<APIProps> = (props) => {
   const schema: RJSFSchema = {
-    title: 'API token',
-    type: 'object',
-    properties: {
-      username: { type: 'string', default: '' }
-    }
+    title: undefined,
+    type: 'string',
   };
   return (
     <Form
@@ -138,7 +132,6 @@ interface ParamProps {
 const InteractiveMethodParam: React.FC<ParamProps> = (props) => {
 
   const { param, refref } = props;
-  const [metamaskInstalled, setMetamaskInstalled] = React.useState<boolean>(false);
 
   const schema = traverse(
     param.schema,
@@ -153,6 +146,9 @@ const InteractiveMethodParam: React.FC<ParamProps> = (props) => {
     { mutable: false }
   );
   schema.title = undefined;
+  useEffect(() => {
+
+  }, []);
   return (
     <Form
       schema={schema}
@@ -161,7 +157,6 @@ const InteractiveMethodParam: React.FC<ParamProps> = (props) => {
       uiSchema={uiSchema}
       validator={validator}
       ref={refref}
-      disabled={!metamaskInstalled}
       templates={{
         ArrayFieldItemTemplate,
         ArrayFieldTemplate,
@@ -171,7 +166,6 @@ const InteractiveMethodParam: React.FC<ParamProps> = (props) => {
         ObjectFieldTemplate
       }}
       onChange={props.onChange}
-      liveValidate={metamaskInstalled}
     />
   );
 }
@@ -243,18 +237,14 @@ const InteractiveMethod: React.FC<Props> = (props) => {
   };
 
   const handleTokenChange = (change: any) => {
-    setToken(change.formData.token);
+    setToken(change.formData);
   }
 
   const handleUsernameChange = (change: any) => {
-    setUsername(change.formData.username);
+    setUsername(change.formData);
   }
 
   function formatMethodString(input: any) {
-    function toCamelCase(str: any) {
-      return str.replace(/_./g, (match: any) => match.charAt(1).toUpperCase());
-    }
-
     let camelCaseString = input
       .split(/(?=[A-Z])|_/)
       .map((word: any, index: any) => index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -273,7 +263,7 @@ const InteractiveMethod: React.FC<Props> = (props) => {
   };
 
   async function sendJsonRpcRequest() {
-    const transport = new HTTPTransport(createEndpoint());
+    const transport = new HTTPTransport(`https://sheltered-chamber-42279-c5a8a55ce26e.herokuapp.com/${createEndpoint()}`);
     const client = new Client(new RequestManager([transport]));
 
     try {
@@ -287,6 +277,8 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     }
   }
 
+
+
   const curlCode = `curl -X POST ${createEndpoint()} \\
   -H "Content-Type: application/json" \\
   -d '${JSON.stringify(methodCall, null, "  ")}'`;
@@ -294,10 +286,12 @@ const InteractiveMethod: React.FC<Props> = (props) => {
   return (
     <div className="container">
       <div className="row">
-        <h3>API endpoint</h3>
+        <h3>API credentials</h3>
         <div className="col col--12">
+          <h4>Username</h4>
           <UsernameForm
             onChange={(change) => handleUsernameChange(change)}></UsernameForm>
+          <h4>Token</h4>
           <TokenForm
             onChange={(change) => handleTokenChange(change)}
           />
