@@ -71,16 +71,43 @@ function MoveDownButton(props: IconButtonProps) {
   );
 }
 
-interface EndpointProps {
+interface APIProps {
   onChange: (event: any) => void;
 }
 
-const EndpointForm: React.FC<EndpointProps> = (props) => {
+const TokenForm: React.FC<APIProps> = (props) => {
   const schema: RJSFSchema = {
-    title: undefined,
+    title: 'API token',
     type: 'object',
     properties: {
-      endpoint: { type: 'string', default: 'https://api.devnet.nil.foundation/api/...' }
+      token: { type: 'string', default: '' }
+    }
+  };
+  return (
+    <Form
+      schema={schema}
+      showErrorList={false}
+      uiSchema={uiSchema}
+      validator={validator}
+      templates={{
+        ArrayFieldItemTemplate,
+        ArrayFieldTemplate,
+        FieldErrorTemplate,
+        FieldTemplate,
+        ButtonTemplates: { AddButton, RemoveButton, MoveUpButton, MoveDownButton },
+        ObjectFieldTemplate
+      }}
+      onChange={props.onChange}
+    />
+  );
+}
+
+const UsernameForm: React.FC<APIProps> = (props) => {
+  const schema: RJSFSchema = {
+    title: 'API token',
+    type: 'object',
+    properties: {
+      username: { type: 'string', default: '' }
     }
   };
   return (
@@ -126,10 +153,6 @@ const InteractiveMethodParam: React.FC<ParamProps> = (props) => {
     { mutable: false }
   );
   schema.title = undefined;
-  useEffect(() => {
-    const installed = !!(window as any)?.ethereum;
-    setMetamaskInstalled(installed);
-  }, []);
   return (
     <Form
       schema={schema}
@@ -189,7 +212,8 @@ const InteractiveMethod: React.FC<Props> = (props) => {
   const { method, components, selectedExamplePairing } = props;
   const [requestParams, setRequestParams] = React.useState<any>(queryString || {});
   const [executionResult, setExecutionResult] = React.useState<any>();
-  const [customEndpoint, setCustomEndpoint] = React.useState<string>('https://api.devnet.nil.foundation/api/...');
+  const [username, setUsername] = React.useState<string>();
+  const [token, setToken] = React.useState<string>();
   const formRefs = method.params.map(() => createRef());
 
   useEffect(() => {
@@ -218,11 +242,15 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     });
   };
 
-  const handleEndpointChange = (change: any) => {
-    setCustomEndpoint(change.formData.endpoint);
-  };
+  const handleTokenChange = (change: any) => {
+    setToken(change.formData.token);
+  }
 
-  function formatString(input: any) {
+  const handleUsernameChange = (change: any) => {
+    setUsername(change.formData.username);
+  }
+
+  function formatMethodString(input: any) {
     function toCamelCase(str: any) {
       return str.replace(/_./g, (match: any) => match.charAt(1).toUpperCase());
     }
@@ -235,13 +263,17 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     return 'eth_' + camelCaseString;
   }
 
+  function createEndpoint() {
+    return `https://api.devnet.nil.foundation/api/${username}/${token}`;
+  }
+
   const methodCall = {
-    method: formatString(method.name),
+    method: formatMethodString(method.name),
     params: method.paramStructure === "by-name" ? requestParams : method.params.map((p, i) => requestParams[(p as ContentDescriptorObject).name] || undefined),
   };
 
   async function sendJsonRpcRequest() {
-    const transport = new HTTPTransport(customEndpoint);
+    const transport = new HTTPTransport(createEndpoint());
     const client = new Client(new RequestManager([transport]));
 
     try {
@@ -255,18 +287,19 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     }
   }
 
-  const curlCode = `curl -X POST ${customEndpoint} \\
+  const curlCode = `curl -X POST ${createEndpoint()} \\
   -H "Content-Type: application/json" \\
   -d '${JSON.stringify(methodCall, null, "  ")}'`;
-  const jsCode = `await window.ethereum.request(${JSON.stringify(methodCall, null, "  ")});`;
 
   return (
     <div className="container">
       <div className="row">
         <h3>API endpoint</h3>
         <div className="col col--12">
-          <EndpointForm
-            onChange={(change) => handleEndpointChange(change)}
+          <UsernameForm
+            onChange={(change) => handleUsernameChange(change)}></UsernameForm>
+          <TokenForm
+            onChange={(change) => handleTokenChange(change)}
           />
         </div>
       </div>
@@ -298,7 +331,7 @@ const InteractiveMethod: React.FC<Props> = (props) => {
           {!components?.CodeBlock &&
             <pre>
               <code>
-                {jsCode}
+                {curlCode}
               </code>
             </pre>
           }
