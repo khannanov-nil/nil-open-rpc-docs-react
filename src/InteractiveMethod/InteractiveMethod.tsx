@@ -227,7 +227,7 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     setRequestParams((val: any) => {
       const newVal = {
         ...val,
-        [(method.params[i] as ContentDescriptorObject).name]: change.formData,
+        [formatParamString((method.params[i] as ContentDescriptorObject).name)]: change.formData,
       }
       history.replace({
         search: qs.stringify(newVal, { encode: false }),
@@ -253,13 +253,26 @@ const InteractiveMethod: React.FC<Props> = (props) => {
     return 'eth_' + camelCaseString;
   }
 
+  function formatParamString(input: any) {
+    let camelCaseString = input
+      .split(/(?=[A-Z])|_/)
+      .map((word: any, index: any) => index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+
+    return camelCaseString;
+  }
+
   function createEndpoint() {
     return `https://api.devnet.nil.foundation/api/${username}/${token}`;
   }
 
   const methodCall = {
+    jsonrpc: "2.0",
     method: formatMethodString(method.name),
-    params: method.paramStructure === "by-name" ? requestParams : method.params.map((p, i) => requestParams[(p as ContentDescriptorObject).name] || undefined),
+    params: method.paramStructure === "by-name"
+      ? Object.fromEntries(Object.entries(requestParams).map(([key, value]) => [formatParamString(key), value]))
+      : method.params.map((p, i) => requestParams[formatParamString((p as ContentDescriptorObject).name)] || undefined),
+    id: 1,
   };
 
   async function sendJsonRpcRequest() {
