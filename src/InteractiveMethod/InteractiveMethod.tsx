@@ -276,7 +276,7 @@ const InteractiveMethod: React.FC<Props> = (props) => {
   };
 
   async function sendJsonRpcRequest() {
-    const transport = new HTTPTransport(`https://sheltered-chamber-42279-c5a8a55ce26e.herokuapp.com/${createEndpoint()}`);
+    const transport = new HTTPTransport(`${createEndpoint()}`);
     const client = new Client(new RequestManager([transport]));
 
     try {
